@@ -24,6 +24,15 @@ function formatText($text) {
     // Italicize text wrapped in underscores (_text_), ensuring spaces or line breaks around them
     $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
 
+    // Convert bullet points to <ul><li> elements
+    $text = preg_replace_callback('/(?:^\* [^\n].+$\n?)+/m', function($matches) {
+        $listItems = preg_split('/\n/', trim($matches[0]));
+        $listItemsFormatted = array_map(function($item) {
+            return '<li>' . substr(trim($item), 2) . '</li>'; // Remove '* ' and wrap in <li>
+        }, $listItems);
+        return '<ul>' . implode("\n", $listItemsFormatted) . '</ul>';
+    }, $text);
+
     return $text;
 }
 
