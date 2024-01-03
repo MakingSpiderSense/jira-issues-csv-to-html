@@ -45,7 +45,7 @@ if ($requested_issue_key) {
 <html>
 <head>
 <meta charset="utf-8">
-<title>PAYC-id - Paycove Jira</title>
+<title><?=$requested_issue_key?> - Paycove Jira</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="style1.css" rel="stylesheet">
 </head>
