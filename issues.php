@@ -1,20 +1,3 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>PAYC-id - Paycove Jira</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="style1.css" rel="stylesheet">
-</head>
-
-<body>
-
-<!-- Spacing -->
-<div class="mb-50"></div>
-
-<div class="container pw-20">
-
-
 <?php
 // Function to convert to snake_case
 function toSnakeCase($string) {
@@ -57,6 +40,23 @@ if ($requested_issue_key) {
     fclose($file);
 }
 ?>
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PAYC-id - Paycove Jira</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="style1.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Spacing -->
+<div class="mb-50"></div>
+
+<div class="container pw-20">
+
 
 <h2><?= htmlspecialchars($issue_key) ?> - <?= htmlspecialchars($summary) ?></h2>
 
