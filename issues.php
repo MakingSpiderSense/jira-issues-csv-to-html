@@ -58,6 +58,41 @@ if ($requested_issue_key) {
     }
     fclose($file);
 }
+
+// Read .env file and create lookup table
+$envPath = __DIR__ . '/.env'; // Adjust the path as needed
+$userLookup = [];
+if (file_exists($envPath)) {
+    $envContents = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($envContents as $line) {
+        if (strpos($line, 'USER_') === 0) {
+            list($key, $name) = explode('=', $line, 2);
+            $userId = str_replace('USER_', '', $key);
+            $userLookup[$userId] = $name;
+        }
+    }
+}
+
+// Function to replace user IDs with names
+function replaceUserIdsWithNames($comment, $lookupTable) {
+    return preg_replace_callback('/\[~accountid:([^\]]+)\]/', function ($matches) use ($lookupTable) {
+        return isset($lookupTable[$matches[1]]) ? $lookupTable[$matches[1]] : $matches[1];
+    }, $comment);
+}
+
+// Processing comments
+foreach ($comments as &$comment) {
+    $commentParts = explode(';', $comment);
+    if (count($commentParts) >= 3) {
+        $timestamp = $commentParts[0];
+        $userId = $commentParts[1];
+        $commentText = replaceUserIdsWithNames($commentParts[2], $userLookup);
+
+        $user = isset($userLookup[$userId]) ? $userLookup[$userId] : $userId;
+        $comment = ['timestamp' => $timestamp, 'user' => $user, 'text' => $commentText];
+    }
+}
+unset($comment); // Unset reference to the last element
 ?>
 
 <!doctype html>
@@ -119,8 +154,8 @@ if ($requested_issue_key) {
     <h3>Comments</h3>
     <ul>
         <?php foreach ($comments as $comment): ?>
-            <?php if (!empty($comment)): ?>
-                <li><?=htmlspecialchars($comment)?></li>
+            <?php if (!empty($comment['text'])): ?>
+                <li><strong><?= htmlspecialchars($comment['timestamp']) ?> - <?= htmlspecialchars($comment['user']) ?></strong>: <?= htmlspecialchars($comment['text']) ?></li>
             <?php endif; ?>
         <?php endforeach; ?>
     </ul>
