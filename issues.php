@@ -156,15 +156,17 @@ unset($comment);
 <link href="style1.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="page-issues">
 
 <!-- Spacing -->
 <div class="mb-50"></div>
 
 <div class="container pw-20">
 
-
-<h2><?=htmlspecialchars($issue_key)?> - <?=htmlspecialchars($summary)?></h2>
+<header>
+    <h2><?=htmlspecialchars($issue_key)?> - <?=htmlspecialchars($summary)?></h2>
+    <div><a href="/">← Back</a></div>
+</header>
 
 <section class="metadata">
     <h3>Metadata</h3>

@@ -257,10 +257,6 @@ pre {
 }
 
 /* === GLOBAL === */
-.container > h2 {
-  margin-bottom: 50px;
-}
-
 section {
   background-color: #FAFAFA;
   padding: 20px;
@@ -273,14 +269,22 @@ section {
   font-size: 14px;
 }
 
-section.description {
+.page-issues header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 50px;
+}
+.page-issues header h2 {
+  padding-right: 50px;
+}
+.page-issues section.description {
   line-height: 2;
 }
-
-section.comments ul {
+.page-issues section.comments ul {
   line-height: 2;
 }
-section.comments ul li {
+.page-issues section.comments ul li {
   margin-bottom: 20px;
 }
 
