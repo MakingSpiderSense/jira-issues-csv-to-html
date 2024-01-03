@@ -49,6 +49,8 @@ if ($requested_issue_key) {
             foreach ($comment_indices as $index) {
                 $comments[] = $row[$index];
             }
+            // Reversing the order of comments
+            $comments = array_reverse($comments);
 
             // No need to continue loop once the issue is found
             break;
@@ -116,9 +118,11 @@ if ($requested_issue_key) {
 <section class="comments">
     <h3>Comments</h3>
     <ul>
-        <?php foreach ($comments as $comment):?>
-            <li><?=htmlspecialchars($comment)?></li>
-        <?php endforeach;?>
+        <?php foreach ($comments as $comment): ?>
+            <?php if (!empty($comment)): ?>
+                <li><?=htmlspecialchars($comment)?></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
     </ul>
 </section>
 
