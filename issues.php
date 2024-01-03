@@ -94,10 +94,15 @@ foreach ($comments as &$comment) {
     if (count($commentParts) >= 3) {
         $timestamp = $commentParts[0];
         $userId = $commentParts[1];
-        $commentText = replaceUserIdsWithNames($commentParts[2], $userLookup);
-
+        $commentText = $commentParts[2];
+        // Replace user IDs with names and placeholders
+        $commentText = replaceUserIdsWithNames($commentText, $userLookup);
+        // Escape the entire comment and then convert line breaks
+        $escapedComment = nl2br(htmlspecialchars($commentText));
+        // Replace placeholders with HTML <span>
+        $escapedComment = preg_replace('/%%TAGGED_USER_(.+?)%%/', '<span class="tagged">$1</span>', $escapedComment);
         $user = isset($userLookup[$userId]) ? $userLookup[$userId] : $userId;
-        $comment = ['timestamp' => $timestamp, 'user' => $user, 'text' => $commentText];
+        $comment = ['timestamp' => $timestamp, 'user' => $user, 'text' => $escapedComment];
     }
 }
 unset($comment); // Unset reference to the last element
@@ -163,13 +168,7 @@ unset($comment); // Unset reference to the last element
     <ul>
         <?php foreach ($comments as $comment): ?>
             <?php if (!empty($comment['text'])): ?>
-                <?php
-                // Escape the entire comment
-                $escapedComment = htmlspecialchars($comment['text']);
-                // Replace placeholders with HTML <span>
-                $escapedComment = preg_replace('/%%TAGGED_USER_(.+?)%%/', '<span class="tagged">$1</span>', $escapedComment);
-                ?>
-                <li><strong><?=htmlspecialchars($comment['timestamp'])?> - <?=htmlspecialchars($comment['user'])?></strong>: <?=$escapedComment?></li>
+                <li><strong><?= htmlspecialchars($comment['timestamp']) ?> - <?= htmlspecialchars($comment['user']) ?></strong>: <?= $comment['text'] ?></li>
             <?php endif; ?>
         <?php endforeach; ?>
     </ul>
