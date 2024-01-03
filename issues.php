@@ -16,21 +16,38 @@ if ($requested_issue_key) {
     $headers = fgetcsv($file);
     $snake_case_headers = array_map('toSnakeCase', $headers);
 
+    // Indices for attachment and comment columns
+    $attachment_indices = $comment_indices = [];
+
+    foreach ($snake_case_headers as $index => $header) {
+        if ($header === 'attachment') {
+            $attachment_indices[] = $index;
+        } elseif ($header === 'comment') {
+            $comment_indices[] = $index;
+        }
+    }
+
     // Loop through each line of the CSV
     while (($row = fgetcsv($file)) !== FALSE) {
         if ($row[array_search('issue_key', $snake_case_headers)] == $requested_issue_key) {
             // Assign values to variables
             foreach ($snake_case_headers as $index => $header) {
-                $$header = $row[$index];
+                if (!in_array($header, ['attachment', 'comment'])) {
+                    $$header = $row[$index];
+                }
             }
 
-            // Handling multiple attachments and comments
-            if (isset($attachments[$row[array_search('attachment_url', $snake_case_headers)]])) {
-                $attachments[] = $row;
+            // Handling multiple attachments
+            foreach ($attachment_indices as $index) {
+                $attachment_data = explode(';', $row[$index]);
+                if (count($attachment_data) >= 4) {
+                    $attachments[] = ['name' => $attachment_data[2], 'link' => $attachment_data[3]];
+                }
             }
 
-            if (isset($comments[$row[array_search('comment', $snake_case_headers)]])) {
-                $comments[] = $row[array_search('comment', $snake_case_headers)];
+            // Handling multiple comments
+            foreach ($comment_indices as $index) {
+                $comments[] = $row[$index];
             }
 
             // No need to continue loop once the issue is found
@@ -80,9 +97,9 @@ if ($requested_issue_key) {
 <section class="attachments">
     <h3>Attachments</h3>
     <ul>
-        <?php foreach ($attachments as $attachment):?>
-            <li><a href="<?=htmlspecialchars($attachment[2])?>"><?=htmlspecialchars($attachment[3])?></a></li>
-        <?php endforeach;?>
+        <?php foreach ($attachments as $attachment): ?>
+            <li><a href="<?=htmlspecialchars($attachment['link'])?>"><?=htmlspecialchars($attachment['name'])?></a></li>
+        <?php endforeach; ?>
     </ul>
 </section>
 
