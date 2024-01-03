@@ -8,6 +8,25 @@ function toSnakeCase($string) {
     return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', str_replace(' ', '_', $string)));
 }
 
+// Format text
+function formatText($text) {
+    // Replace headings
+    $text = preg_replace_callback('/^h([1-6])\.\s?(.*)$/m', function($matches) {
+        return '<strong>' . str_repeat('#', (int)$matches[1]) . ' ' . $matches[2] . '</strong>';
+    }, $text);
+
+    // Replace {noformat} with <code> tags
+    $text = preg_replace('/\{noformat\}(.*?)\{noformat\}/s', '<code>$1</code>', $text);
+
+    // Bold text wrapped in asterisks (*text*), ensuring spaces or line breaks around them
+    $text = preg_replace('/(\s|^)\*(\S.*?)\*(\s|$)/s', '$1<strong>$2</strong>$3', $text);
+
+    // Italicize text wrapped in underscores (_text_), ensuring spaces or line breaks around them
+    $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
+
+    return $text;
+}
+
 // Fetch the issue key from the query string
 $requested_issue_key = isset($_GET['issue_key']) ? $_GET['issue_key'] : null;
 
@@ -106,6 +125,17 @@ foreach ($comments as &$comment) {
     }
 }
 unset($comment); // Unset reference to the last element
+
+// Apply formatText to the description
+$description = formatText($description);
+
+// Process comments and apply formatText to each
+foreach ($comments as &$comment) {
+    if (isset($comment['text'])) {
+        $comment['text'] = formatText($comment['text']);
+    }
+}
+unset($comment);
 ?>
 
 <!doctype html>
