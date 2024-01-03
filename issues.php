@@ -1,4 +1,8 @@
 <?php
+// Includes
+include 'helpers.php';
+include 'globals.php';
+
 // Function to convert to snake_case
 function toSnakeCase($string) {
     return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', str_replace(' ', '_', $string)));
@@ -99,7 +103,7 @@ unset($comment); // Unset reference to the last element
 <html>
 <head>
 <meta charset="utf-8">
-<title><?=$requested_issue_key?> - Paycove Jira</title>
+<title><?=$requested_issue_key?> - <?= htmlspecialchars($projectName) ?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="style1.css" rel="stylesheet">
 </head>

@@ -1,8 +1,14 @@
+<?php
+// Includes
+include 'helpers.php';
+include 'globals.php';
+?>
+
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>Issues - Paycove Jira</title>
+<title>Issues - <?= htmlspecialchars($projectName) ?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="style1.css" rel="stylesheet">
 </head>
