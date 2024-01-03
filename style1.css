@@ -257,8 +257,13 @@ pre {
 }
 
 /* === GLOBAL === */
+section {
+  background-color: #FAFAFA;
+  padding: 20px;
+}
+
 .tagged {
-  background-color: #f2f2f2;
+  background-color: #E3ECFF;
   padding: 2px 8px;
   border-radius: 8px;
   font-size: 14px;
