@@ -18,6 +18,9 @@ function formatText($text) {
     // Replace {noformat} with <code> tags
     $text = preg_replace('/\{noformat\}(.*?)\{noformat\}/s', '<code>$1</code>', $text);
 
+    // Convert {quote} to <blockquote> tags
+    $text = preg_replace('/\{quote\}(.*?)\{quote\}/s', '<blockquote>$1</blockquote>', $text);
+
     // Bold text wrapped in asterisks (*text*), ensuring spaces or line breaks around them
     $text = preg_replace('/(\s|^)\*(\S.*?)\*(\s|$)/s', '$1<strong>$2</strong>$3', $text);
 

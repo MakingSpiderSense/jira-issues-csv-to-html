@@ -269,6 +269,11 @@ section {
   font-size: 14px;
 }
 
+blockquote {
+  border-left: 4px solid #f2f2f2;
+  padding-left: 20px;
+}
+
 .page-issues header {
   display: flex;
   align-items: center;
