@@ -264,6 +264,17 @@ pre {
   font-size: 14px;
 }
 
+section.description {
+  line-height: 2;
+}
+
+section.comments ul {
+  line-height: 2;
+}
+section.comments ul li {
+  margin-bottom: 20px;
+}
+
 /* === HEADER === */
 /* === FOOTER === */
 /* === HOME === */
