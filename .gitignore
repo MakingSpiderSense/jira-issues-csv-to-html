@@ -1,0 +1,50 @@
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ai
+*.svg
+*.psd
+
+# Video
+*.mp4
+*.avi
+*.webm
+*.mkv
+*.flv
+*.ogv
+*.ogg
+*.wmv
+*.mpg
+*.mpeg
+*.gif
+
+# Audio
+*.mp3
+*.wav
+
+# 3D Objects
+*.gltf
+*.glb
+*.obj
+*.mtl
+
+# Folders
+**/.sass-cache
+**/node_modules
+**/vendor
+**/.git
+**/no-upload
+**/production
+
+# Files
+style.css.map
+bookmark.md
+.env
+hot
+wp-config.php
+db-connect.php
+db-conn.php
+dbc.php
+jira.csv
