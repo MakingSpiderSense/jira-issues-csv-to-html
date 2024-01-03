@@ -58,50 +58,50 @@ if ($requested_issue_key) {
 <div class="container pw-20">
 
 
-<h2><?= htmlspecialchars($issue_key) ?> - <?= htmlspecialchars($summary) ?></h2>
+<h2><?=htmlspecialchars($issue_key)?> - <?=htmlspecialchars($summary)?></h2>
 
 <section class="metadata">
     <h3>Metadata</h3>
     <ul>
-        <li>Issue Type: <?= htmlspecialchars($issue_type) ?></li>
-        <li>Status: <?= htmlspecialchars($status) ?></li>
-        <li>Priority: <?= htmlspecialchars($priority) ?></li>
-        <li>Environment: <?= htmlspecialchars($environment) ?></li>
+        <li>Issue Type: <?=htmlspecialchars($issue_type)?></li>
+        <li>Status: <?=htmlspecialchars($status)?></li>
+        <li>Priority: <?=htmlspecialchars($priority)?></li>
+        <li>Environment: <?=htmlspecialchars($environment)?></li>
     </ul>
 </section>
 
 <section class="description">
     <h3>Description</h3>
     <div>
-        <?= htmlspecialchars($description) ?>
+        <?=htmlspecialchars($description)?>
     </div>
 </section>
 
 <section class="attachments">
     <h3>Attachments</h3>
     <ul>
-        <?php foreach ($attachments as $attachment): ?>
-            <li><a href="<?= htmlspecialchars($attachment[2]) ?>"><?= htmlspecialchars($attachment[3]) ?></a></li>
-        <?php endforeach; ?>
+        <?php foreach ($attachments as $attachment):?>
+            <li><a href="<?=htmlspecialchars($attachment[2])?>"><?=htmlspecialchars($attachment[3])?></a></li>
+        <?php endforeach;?>
     </ul>
 </section>
 
 <section class="more-info">
     <h3>More Info</h3>
     <ul>
-        <li>Creator: <?= htmlspecialchars($creator) ?></li>
-        <li>Created: <?= htmlspecialchars($created) ?></li>
-        <li>Labels: <?= htmlspecialchars($labels) ?></li>
-        <li>Parent: <?= htmlspecialchars($parent_summary) ?></li>
+        <li>Creator: <?=htmlspecialchars($creator)?></li>
+        <li>Created: <?=htmlspecialchars($created)?></li>
+        <li>Labels: <?=htmlspecialchars($labels)?></li>
+        <li>Parent: <?=htmlspecialchars($parent_summary)?></li>
     </ul>
 </section>
 
 <section class="comments">
     <h3>Comments</h3>
     <ul>
-        <?php foreach ($comments as $comment): ?>
-            <li><?= htmlspecialchars($comment) ?></li>
-        <?php endforeach; ?>
+        <?php foreach ($comments as $comment):?>
+            <li><?=htmlspecialchars($comment)?></li>
+        <?php endforeach;?>
     </ul>
 </section>
 
