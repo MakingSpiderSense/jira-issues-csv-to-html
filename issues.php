@@ -77,10 +77,12 @@ if (file_exists($envPath)) {
     }
 }
 
-// Function to replace user IDs with names
+// Function to replace user IDs with placeholder text
 function replaceUserIdsWithNames($comment, $lookupTable) {
     return preg_replace_callback('/\[~accountid:([^\]]+)\]/', function ($matches) use ($lookupTable) {
-        return isset($lookupTable[$matches[1]]) ? $lookupTable[$matches[1]] : $matches[1];
+        $name = isset($lookupTable[$matches[1]]) ? $lookupTable[$matches[1]] : $matches[1];
+        // Use a unique placeholder
+        return "%%TAGGED_USER_" . htmlspecialchars($name) . "%%";
     }, $comment);
 }
 
@@ -159,7 +161,13 @@ unset($comment); // Unset reference to the last element
     <ul>
         <?php foreach ($comments as $comment): ?>
             <?php if (!empty($comment['text'])): ?>
-                <li><strong><?= htmlspecialchars($comment['timestamp']) ?> - <?= htmlspecialchars($comment['user']) ?></strong>: <?= htmlspecialchars($comment['text']) ?></li>
+                <?php
+                // Escape the entire comment
+                $escapedComment = htmlspecialchars($comment['text']);
+                // Replace placeholders with HTML <span>
+                $escapedComment = preg_replace('/%%TAGGED_USER_(.+?)%%/', '<span class="tagged">$1</span>', $escapedComment);
+                ?>
+                <li><strong><?=htmlspecialchars($comment['timestamp'])?> - <?=htmlspecialchars($comment['user'])?></strong>: <?=$escapedComment?></li>
             <?php endif; ?>
         <?php endforeach; ?>
     </ul>
