@@ -41,6 +41,8 @@ if ($requested_issue_key) {
                 }
             }
 
+            $description = nl2br(htmlspecialchars($description));
+
             // Handling multiple attachments
             foreach ($attachment_indices as $index) {
                 $attachment_data = explode(';', $row[$index]);
@@ -133,7 +135,7 @@ unset($comment); // Unset reference to the last element
 <section class="description">
     <h3>Description</h3>
     <div>
-        <?=htmlspecialchars($description)?>
+        <?=$description?>
     </div>
 </section>
 
