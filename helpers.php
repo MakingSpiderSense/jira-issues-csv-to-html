@@ -10,6 +10,7 @@ function console_log($data) {
 }
 
 
+// Load .env file
 function loadEnv($envPath) {
     if (!file_exists($envPath)) {
         return [];
@@ -28,6 +29,7 @@ function loadEnv($envPath) {
 }
 
 
+// Get environment variable
 function getEnvVariable($key, $default = null) {
     static $envVariables;
 
