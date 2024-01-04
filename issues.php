@@ -128,7 +128,13 @@ if ($requested_issue_key) {
             foreach ($attachment_indices as $index) {
                 $attachment_data = explode(';', $row[$index]);
                 if (count($attachment_data) >= 4) {
-                    $attachments[] = ['name' => $attachment_data[2], 'link' => $attachment_data[3]];
+                    // Extract the attachment ID from the original link
+                    preg_match('/\/(\d+)$/', $attachment_data[3], $matches);
+                    $attachmentId = $matches[1] ?? '';
+
+                    $newLink = "/img/attachments/" . urlencode($requested_issue_key) . "/" . $attachmentId;
+
+                    $attachments[] = ['name' => $attachment_data[2], 'link' => $newLink];
                 }
             }
 
@@ -242,7 +248,7 @@ unset($comment);
     <h3>Attachments</h3>
     <ul>
         <?php foreach ($attachments as $attachment): ?>
-            <li><a href="<?=htmlspecialchars($attachment['link'])?>"><?=htmlspecialchars($attachment['name'])?></a></li>
+            <li><a href="<?=htmlspecialchars($attachment['link'])?>" target="_blank"><?=htmlspecialchars($attachment['name'])?></a></li>
         <?php endforeach; ?>
     </ul>
 </section>
