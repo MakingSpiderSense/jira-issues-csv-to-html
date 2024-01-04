@@ -27,6 +27,9 @@ function formatText($text) {
     // Italicize text wrapped in underscores (_text_), ensuring spaces or line breaks around them
     $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
 
+    // Convert links to <a> tags
+    $text = preg_replace('/\[(.*?)\|(https?:\/\/[^\|\]]+)(\|smart-link)?\]/', '<a href="$2" target="_blank">$1</a>', $text);
+
     // Convert bullet points to <ul><li> elements
     $text = preg_replace_callback('/(?:^\* [^\n].+$\n?)+/m', function($matches) {
         $listItems = preg_split('/\n/', trim($matches[0]));
