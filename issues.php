@@ -43,6 +43,38 @@ function formatText($text) {
         return '<ul>' . implode("\n", $listItemsFormatted) . '</ul>';
     }, $text);
 
+    // Convert ordered list items to <ol><li> elements
+    // Convert nested ordered lists up to 3 levels deep
+    $text = preg_replace_callback('/(?:^(#{1,3})\s.+$\n?)+/m', function($matches) {
+        $nestedListItems = preg_split('/\n/', trim($matches[0]));
+
+        $currentLevel = 0;
+        $html = '';
+        foreach ($nestedListItems as $item) {
+            preg_match('/^(#{1,3})\s(.*)$/', $item, $itemMatches);
+            $level = strlen($itemMatches[1]); // Count number of '#'
+            $content = $itemMatches[2];
+
+            while ($currentLevel < $level) {
+                $html .= '<ol>';
+                $currentLevel++;
+            }
+            while ($currentLevel > $level) {
+                $html .= '</ol>';
+                $currentLevel--;
+            }
+
+            $html .= '<li>' . $content . '</li>';
+        }
+
+        // Close any remaining open lists
+        while ($currentLevel-- > 0) {
+            $html .= '</ol>';
+        }
+
+        return $html;
+    }, $text);
+
     return $text;
 }
 

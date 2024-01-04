@@ -31,6 +31,14 @@ code.multiline {
     line-height: 2.5;
 }
 
+ol {
+    margin-left: 25px;
+    margin-bottom: 20px;
+    li {
+        margin-bottom: 15px;
+    }
+}
+
 // Issues Page
 .page-issues {
     // Header

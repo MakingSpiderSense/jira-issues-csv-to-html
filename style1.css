@@ -290,6 +290,14 @@ code.multiline {
   line-height: 2.5;
 }
 
+ol {
+  margin-left: 25px;
+  margin-bottom: 20px;
+}
+ol li {
+  margin-bottom: 15px;
+}
+
 .page-issues header {
   display: flex;
   align-items: center;
