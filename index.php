@@ -55,9 +55,9 @@ fclose($file);
 
 // Custom sort function
 function sortIssues($a, $b) {
-    $numA = intval(substr($a['key'], 5)); // Extracting number part from "PAYC-xxx"
-    $numB = intval(substr($b['key'], 5));
-
+    // Extracting numeric part from the issue key
+    $numA = intval(preg_replace('/[^0-9]/', '', $a['key']));
+    $numB = intval(preg_replace('/[^0-9]/', '', $b['key']));
     return $numB - $numA; // Descending order
 }
 
