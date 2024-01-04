@@ -37,6 +37,7 @@
 **/.git
 **/no-upload
 **/production
+**/img/attachments
 
 # Files
 style.css.map
