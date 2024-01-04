@@ -274,6 +274,22 @@ blockquote {
   padding-left: 20px;
 }
 
+code {
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+code.inline {
+  padding: 2px 8px;
+}
+
+code.multiline {
+  display: block;
+  padding: 20px;
+  line-height: 2.5;
+}
+
 .page-issues header {
   display: flex;
   align-items: center;

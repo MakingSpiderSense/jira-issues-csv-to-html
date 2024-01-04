@@ -15,8 +15,12 @@ function formatText($text) {
         return '<strong>' . str_repeat('#', (int)$matches[1]) . ' ' . $matches[2] . '</strong>';
     }, $text);
 
-    // Replace {noformat} with <code> tags
-    $text = preg_replace('/\{noformat\}(.*?)\{noformat\}/s', '<code>$1</code>', $text);
+    // Convert {noformat} to <code> tags with appropriate class
+    $text = preg_replace_callback('/\{noformat\}(.*?)\{noformat\}/s', function($matches) {
+        $codeContent = $matches[1];
+        $codeClass = (strpos($codeContent, "\n") === false) ? 'inline' : 'multiline';
+        return '<code class="' . $codeClass . '">' . htmlspecialchars($codeContent) . '</code>';
+    }, $text);
 
     // Convert {quote} to <blockquote> tags
     $text = preg_replace('/\{quote\}(.*?)\{quote\}/s', '<blockquote>$1</blockquote>', $text);
@@ -171,7 +175,7 @@ unset($comment);
 
 <header>
     <h2><?=htmlspecialchars($issue_key)?> - <?=htmlspecialchars($summary)?></h2>
-    <div><a href="/">← Back</a></div>
+    <div style="min-width: 65px;"><a href="/">← Back</a></div>
 </header>
 
 <section class="metadata">
