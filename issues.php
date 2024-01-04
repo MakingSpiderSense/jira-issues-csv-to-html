@@ -25,36 +25,44 @@ function formatText($text) {
     // Convert {quote} to <blockquote> tags
     $text = preg_replace('/\{quote\}(.*?)\{quote\}/s', '<blockquote>$1</blockquote>', $text);
 
-    // Bold text wrapped in asterisks (*text*), ensuring spaces or line breaks around them
-    $text = preg_replace('/(\s|^)\*(\S.*?)\*(\s|$)/s', '$1<strong>$2</strong>$3', $text);
-
-    // Italicize text wrapped in underscores (_text_), ensuring spaces or line breaks around them
-    $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
-
     // Convert links to <a> tags
     $text = preg_replace('/\[(.*?)\|(https?:\/\/[^\|\]]+)(\|smart-link)?\]/', '<a href="$2" target="_blank">$1</a>', $text);
 
-    // Convert bullet points to <ul><li> elements
-    $text = preg_replace_callback('/(?:^\* [^\n].+$\n?)+/m', function($matches) {
-        $listItems = preg_split('/\n/', trim($matches[0]));
-        $listItemsFormatted = array_map(function($item) {
-            return '<li>' . substr(trim($item), 2) . '</li>'; // Remove '* ' and wrap in <li>
-        }, $listItems);
-        return '<ul>' . implode("\n", $listItemsFormatted) . '</ul>';
+    // Convert nested bullet points up to 3 levels deep
+    $text = preg_replace_callback('/(?:^(\*{1,3})\s.+$\n?)+/m', function($matches) {
+        $nestedListItems = preg_split('/\n/', trim($matches[0]));
+        $currentLevel = 0;
+        $html = '';
+        foreach ($nestedListItems as $item) {
+            preg_match('/^(\*{1,3})\s(.*)$/', $item, $itemMatches);
+            $level = strlen($itemMatches[1]); // Count number of '*'
+            $content = $itemMatches[2];
+            while ($currentLevel < $level) {
+                $html .= '<ul>';
+                $currentLevel++;
+            }
+            while ($currentLevel > $level) {
+                $html .= '</ul>';
+                $currentLevel--;
+            }
+            $html .= '<li>' . $content . '</li>';
+        }
+        // Close any remaining open lists
+        while ($currentLevel-- > 0) {
+            $html .= '</ul>';
+        }
+        return $html;
     }, $text);
 
-    // Convert ordered list items to <ol><li> elements
-    // Convert nested ordered lists up to 3 levels deep
+    // Convert ordered list items to <ol><li> elements up to 3 levels deep
     $text = preg_replace_callback('/(?:^(#{1,3})\s.+$\n?)+/m', function($matches) {
         $nestedListItems = preg_split('/\n/', trim($matches[0]));
-
         $currentLevel = 0;
         $html = '';
         foreach ($nestedListItems as $item) {
             preg_match('/^(#{1,3})\s(.*)$/', $item, $itemMatches);
             $level = strlen($itemMatches[1]); // Count number of '#'
             $content = $itemMatches[2];
-
             while ($currentLevel < $level) {
                 $html .= '<ol>';
                 $currentLevel++;
@@ -63,17 +71,20 @@ function formatText($text) {
                 $html .= '</ol>';
                 $currentLevel--;
             }
-
             $html .= '<li>' . $content . '</li>';
         }
-
         // Close any remaining open lists
         while ($currentLevel-- > 0) {
             $html .= '</ol>';
         }
-
         return $html;
     }, $text);
+
+    // Bold text wrapped in asterisks (*text*), ensuring spaces or line breaks around them
+    $text = preg_replace('/(\s|^)\*(\S.*?)\*(\s|$)/s', '$1<strong>$2</strong>$3', $text);
+
+    // Italicize text wrapped in underscores (_text_), ensuring spaces or line breaks around them
+    $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
 
     return $text;
 }
