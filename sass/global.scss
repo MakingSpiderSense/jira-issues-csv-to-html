@@ -12,6 +12,12 @@ section {
     font-size: 14px;
 }
 
+img.embed {
+    width: 100%;
+    max-width: 350px;
+    display: inline-block;
+}
+
 blockquote {
     border-left: 4px solid #f2f2f2;
     padding-left: 20px;

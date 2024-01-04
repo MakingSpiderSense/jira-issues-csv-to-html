@@ -9,7 +9,7 @@ function toSnakeCase($string) {
 }
 
 // Format text
-function formatText($text) {
+function formatText($text, $attachmentMap) {
     // Replace headings
     $text = preg_replace_callback('/^h([1-6])\.\s?(.*)$/m', function($matches) {
         return '<strong>' . str_repeat('#', (int)$matches[1]) . ' ' . $matches[2] . '</strong>';
@@ -86,6 +86,15 @@ function formatText($text) {
     // Italicize text wrapped in underscores (_text_), ensuring spaces or line breaks around them
     $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
 
+    // Convert image embeds to <img> tags
+    $text = preg_replace_callback('/\!([^|]+)\|width=\d+,height=\d+\!/', function($matches) use ($attachmentMap) {
+        $filename = $matches[1];
+        if (isset($attachmentMap[$filename])) {
+            return '<img src="' . htmlspecialchars($attachmentMap[$filename]) . '" class="embed">';
+        }
+        return $matches[0]; // Return original text if no matching attachment found
+    }, $text);
+
     return $text;
 }
 
@@ -95,6 +104,7 @@ $requested_issue_key = isset($_GET['issue_key']) ? $_GET['issue_key'] : null;
 // Variables to hold issue details
 $issue_key = $summary = $issue_type = $status = $priority = $environment = $description = $creator = $created = $labels = $parent_summary = '';
 $attachments = $comments = [];
+$attachmentMap = []; // Map for attaching filenames to URLs
 
 if ($requested_issue_key) {
     $file = fopen('jira.csv', 'r');
@@ -131,10 +141,9 @@ if ($requested_issue_key) {
                     // Extract the attachment ID from the original link
                     preg_match('/\/(\d+)$/', $attachment_data[3], $matches);
                     $attachmentId = $matches[1] ?? '';
-
                     $newLink = "/img/attachments/" . urlencode($requested_issue_key) . "/" . $attachmentId;
-
                     $attachments[] = ['name' => $attachment_data[2], 'link' => $newLink];
+                    $attachmentMap[$attachment_data[2]] = $newLink; // Add to the map
                 }
             }
 
@@ -153,7 +162,7 @@ if ($requested_issue_key) {
 }
 
 // Read .env file and create lookup table
-$envPath = __DIR__ . '/.env'; // Adjust the path as needed
+$envPath = __DIR__ . '/.env';
 $userLookup = [];
 if (file_exists($envPath)) {
     $envContents = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -195,12 +204,12 @@ foreach ($comments as &$comment) {
 unset($comment); // Unset reference to the last element
 
 // Apply formatText to the description
-$description = formatText($description);
+$description = formatText($description, $attachmentMap);
 
 // Process comments and apply formatText to each
 foreach ($comments as &$comment) {
     if (isset($comment['text'])) {
-        $comment['text'] = formatText($comment['text']);
+        $comment['text'] = formatText($comment['text'], $attachmentMap);
     }
 }
 unset($comment);
