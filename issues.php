@@ -86,11 +86,12 @@ function formatText($text, $attachmentMap) {
     // Italicize text wrapped in underscores (_text_), ensuring spaces or line breaks around them
     $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
 
-    // Convert image embeds to <img> tags
+    // Convert image embeds to linked <img> tags
     $text = preg_replace_callback('/\!([^|]+)\|width=\d+,height=\d+\!/', function($matches) use ($attachmentMap) {
         $filename = $matches[1];
         if (isset($attachmentMap[$filename])) {
-            return '<img src="' . htmlspecialchars($attachmentMap[$filename]) . '" class="embed">';
+            $imgUrl = htmlspecialchars($attachmentMap[$filename]);
+            return '<a href="' . $imgUrl . '" target="_blank"><img src="' . $imgUrl . '" class="embed"></a>';
         }
         return $matches[0]; // Return original text if no matching attachment found
     }, $text);
