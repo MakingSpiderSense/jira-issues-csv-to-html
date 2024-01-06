@@ -3,13 +3,16 @@
 include 'helpers.php';
 include 'globals.php';
 
+// Variables
+$baseUrl = getBaseUrl();
+
 // Function to convert to snake_case
 function toSnakeCase($string) {
     return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', str_replace(' ', '_', $string)));
 }
 
 // Format text
-function formatText($text, $attachmentMap) {
+function formatText($text, $attachmentMap, $baseUrl) {
     // Replace headings
     $text = preg_replace_callback('/^h([1-6])\.\s?(.*)$/m', function($matches) {
         return '<strong>' . str_repeat('#', (int)$matches[1]) . ' ' . $matches[2] . '</strong>';
@@ -87,7 +90,7 @@ function formatText($text, $attachmentMap) {
     $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
 
     // Convert image embeds to linked <img> tags
-    $text = preg_replace_callback('/\!([^|]+)\|width=\d+,height=\d+\!/', function($matches) use ($attachmentMap) {
+    $text = preg_replace_callback('/\!([^|]+)\|width=\d+,height=\d+\!/', function($matches) use ($attachmentMap, $baseUrl) {
         $filename = $matches[1];
         if (isset($attachmentMap[$filename])) {
             $imgUrl = htmlspecialchars($attachmentMap[$filename]);
@@ -142,7 +145,7 @@ if ($requested_issue_key) {
                     // Extract the attachment ID from the original link
                     preg_match('/\/(\d+)$/', $attachment_data[3], $matches);
                     $attachmentId = $matches[1] ?? '';
-                    $newLink = "/img/attachments/" . urlencode($requested_issue_key) . "/" . $attachmentId;
+                    $newLink = $baseUrl . "img/attachments/" . urlencode($requested_issue_key) . "/" . $attachmentId;
                     $attachments[] = ['name' => $attachment_data[2], 'link' => $newLink];
                     $attachmentMap[$attachment_data[2]] = $newLink; // Add to the map
                 }
@@ -205,12 +208,12 @@ foreach ($comments as &$comment) {
 unset($comment); // Unset reference to the last element
 
 // Apply formatText to the description
-$description = formatText($description, $attachmentMap);
+$description = formatText($description, $attachmentMap, $baseUrl);
 
 // Process comments and apply formatText to each
 foreach ($comments as &$comment) {
     if (isset($comment['text'])) {
-        $comment['text'] = formatText($comment['text'], $attachmentMap);
+        $comment['text'] = formatText($comment['text'], $attachmentMap, $baseUrl);
     }
 }
 unset($comment);

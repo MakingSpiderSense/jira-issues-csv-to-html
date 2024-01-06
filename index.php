@@ -68,9 +68,12 @@ usort($issues, 'sortIssues');
     <h3>Issues</h3>
     <ul>
         <?php
+        // Get the base URL
+        $baseUrl = getBaseUrl();
         // Loop through sorted issues and output them
         foreach ($issues as $issue) {
-            echo "<li><a href=\"/issues.php?issue_key=" . htmlspecialchars($issue['key']) . "\">" . htmlspecialchars($issue['key']) . " - " . htmlspecialchars($issue['summary']) . "</a></li>";
+            $url = $baseUrl . "issues.php?issue_key=" . htmlspecialchars($issue['key']);
+            echo "<li><a href=\"" . $url . "\">" . htmlspecialchars($issue['key']) . " - " . htmlspecialchars($issue['summary']) . "</a></li>";
         }
         ?>
     </ul>
