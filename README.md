@@ -1,8 +1,8 @@
 # Jira Issue Viewer: CSV to HTML
 
-This is a quick and dirty repo that can be used to convert a CSV file to HTML. All content will be in a read-only state. Descriptions and Comments should be formatted, although it's not perfect. If set up correctly, all content should be able to be displayed offline, including attachments.
+This repo provides a simple, efficient way to transform CSV files into HTML format. All content will be in a read-only state. Descriptions and Comments should be formatted, although it's not perfect. If set up correctly, all content should be able to be displayed offline, including attachments.
 
-You should be able to view a list of the issues and click on them to view the details of a specific issue. Here you will be able to see the Issue Name, Type, Status, Priority, Environment, Description, Attachments, Creator, Created Date, Labels, Parent, and Comments.
+The interface allows you to be able to view a list of the issues and select any to view its details. You'll find information like the issue Name, Type, Status, Priority, Environment, Description, Attachments, Creator, Created Date, Labels, Parent, and Comments.
 
 ## Usage
 
