@@ -90,7 +90,7 @@ function formatText($text, $attachmentMap, $baseUrl) {
     $text = preg_replace('/(\s|^)_(\S.*?)_(\s|$)/s', '$1<em>$2</em>$3', $text);
 
     // Convert image embeds to linked <img> tags
-    $text = preg_replace_callback('/\!([^|]+)\|width=\d+,height=\d+\!/', function($matches) use ($attachmentMap, $baseUrl) {
+    $text = preg_replace_callback('/\!([^|!]+)\|.*?(width=\d+(%|px)?,?)?(height=\d+(%|px)?)?\!/', function($matches) use ($attachmentMap, $baseUrl) {
         $filename = $matches[1];
         if (isset($attachmentMap[$filename])) {
             $imgUrl = htmlspecialchars($attachmentMap[$filename]);
